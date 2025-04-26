@@ -1,0 +1,66 @@
+package com.counters.www.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.counters.www.dto.CountersDto;
+import com.counters.www.service.CounterService;
+
+@RestController
+@RequestMapping("/api")
+public class CounterController {
+
+	@Autowired
+	private CounterService service;
+	
+	@GetMapping("/check")
+	private ResponseEntity<String> successFullyChecked(){
+		return ResponseEntity.ok("successfully checked");
+	}
+	
+	@GetMapping("/allcounters")
+	private ResponseEntity<?> get(){
+		return service.get();
+	}
+	
+	@PostMapping("/save")
+	public ResponseEntity<String> savecounter(@RequestBody CountersDto countersdto )
+	{
+		return service.savecounter(countersdto);
+	}
+	
+	@GetMapping("/getcounter")
+	private ResponseEntity<?> getcounterdetails(@RequestParam Long id)//getcounter?id=1
+	{
+		return service.getcounterdetails(id);
+	}
+
+	@PutMapping("/updatecounter")
+	private ResponseEntity<?>updatecounter(@RequestParam Long id,@RequestBody CountersDto countersdto)
+	{
+		return service.updatecounter(id,countersdto);
+	}
+	@DeleteMapping("/deletecounter/{id}")
+	private ResponseEntity<?>deletecounter(@PathVariable Long id)
+	{
+		return service.deletecounter(id);
+	}
+	
+	@PutMapping("updateStatus/{id}") //updates status based on id
+	public ResponseEntity<String> updateStatusById(@PathVariable int id,@RequestParam boolean status){//3?status=false
+		if(service.updateStatusById(id,status)) {
+			return ResponseEntity.ok("counter status updated Successfully ! ");
+		} else {
+			return ResponseEntity.status(401).body("counter not exists with id : "+id);
+		}
+	}
+}
