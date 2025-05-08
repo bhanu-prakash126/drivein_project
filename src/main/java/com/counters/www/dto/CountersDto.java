@@ -18,7 +18,7 @@ public class CountersDto {
 	private String owner;
 	private String email;
 	private String mobilenumber;
-	private String image;
+//	private String image;
 	private boolean status;
 	
 	@OneToMany(mappedBy ="counters")
